@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zoom Into the Extraordinary</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: SF Pro Display, SF Pro Icons, Helvetica Neue, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+      background-color: #000;
+    }
+
+    /* Opening Section */
+    .opening-section {
+      height: 100vh;
+      background-color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .opening-section h2 {
+      font-size: 3rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in forwards;
+    }
+
+    .scroll-indicator {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      opacity: 0;
+      animation: fadeIn 1.5s ease-in 0.5s forwards, bounce 2s ease-in-out 2s infinite;
+    }
+
+    .scroll-indicator::after {
+      content: '↓';
+      display: block;
+      margin-top: 1rem;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    /* Zoom Animation Section */
+    .container {
+      height: 300vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-image: url('videos/space.gif');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    .sticky-wrapper {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #text-wrapper {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1.2;
+    }
+
+    #letter-o {
+      display: inline-block;
+      position: relative;
+      z-index: 15;
+      color: white;
+    }
+
+    #reveal-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      transform: translate(-50%, -50%) scale(0);
+      clip-path: circle(0% at 50% 50%);
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    /* Transition Section */
+    .transition-section {
+      height: 100vh;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .transition-section h2 {
+      font-size: 3rem;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+    }
+
+    /* Content Section */
+    .content-section {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+      padding: 5rem 2rem;
+      color: white;
+    }
+
+    .content-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .content-section h2 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+
+    .content-card {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .content-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .content-card p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .opening-section h2 {
+        font-size: 2rem;
+        padding: 0 1rem;
+      }
+
+      .scroll-indicator {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        padding: 0 1rem;
+      }
+
+      .transition-section h2 {
+        font-size: 2rem;
+        padding: 0 1rem;
+      }
+
+      .content-section {
+        padding: 3rem 1rem;
+      }
+
+      .content-section h2 {
+        font-size: 2.5rem;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .content-card {
+        padding: 1.5rem;
+      }
+
+      .content-card h3 {
+        font-size: 1.5rem;
+      }
+
+      .content-card p {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .opening-section h2 {
+        font-size: 1.5rem;
+      }
+
+      .transition-section h2 {
+        font-size: 1.5rem;
+      }
+
+      .content-section h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Opening Section -->
+  <section class="opening-section">
+    <h2>Welcome</h2>
+    <div class="scroll-indicator">Scroll Down</div>
+  </section>
+
+  <!-- Zoom Animation Section -->
+  <div class="container intro-section">
+    <div class="sticky-wrapper">
+      <img id="reveal-image" src="images/Mountains after Sunset 4K 8K.jfif" alt="Revealed Image">
+      <div id="text-wrapper">
+        <h1>
+          Zoom<br>int<span id="letter-o">o</span> the<br>Extraordinary
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transition Section -->
+  <section class="transition-section">
+    <h2 id="transition-text">Discover What Lies Beyond</h2>
+  </section>
+
+  
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Main zoom animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".intro-section",
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 2,
+        pin: ".sticky-wrapper",
+      }
+    });
+
+    tl.to("#text-wrapper", {
+      scale: 30,
+      opacity: 0,
+      transformOrigin: "50% 50%",
+      ease: "power2.inOut",
+      duration: 1
+    })
+    .to("#letter-o", {
+      scale: 8,
+      transformOrigin: "center center",
+      ease: "power2.inOut",
+      duration: 1
+    }, "<")
+    .to("#reveal-image", {
+      opacity: 1,
+      scale: 1,
+      clipPath: "circle(100% at 50% 50%)",
+      duration: 1.5,
+      ease: "power2.out"
+    }, "<0.3");
+
+    // Transition text animation
+    gsap.to("#transition-text", {
+      opacity: 1,
+      duration: 1,
+      scrollTrigger: {
+        trigger: ".transition-section",
+        start: "top center",
+        end: "center center",
+        scrub: 1
+      }
+    });
+
+    // Content cards stagger animation
+    gsap.from(".content-card", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: ".content-grid",
+        start: "top 80%",
+        end: "top 50%",
+        scrub: 1
+      }
+    });
+  </script>
+</body>
+</html>
