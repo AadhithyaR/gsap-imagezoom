@@ -214,6 +214,31 @@
       z-index: 9999;
     }
 
+    /* Glowing wind trail effect */
+    .cursor-glow {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      animation: fadeOutGlow 1.2s ease-out forwards;
+      filter: blur(8px);
+    }
+
+    @keyframes fadeOutGlow {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.8);
+      }
+    }
+
     /* Hover effects */
     body:hover .custom-cursor {
       border-color: #fff;
@@ -401,14 +426,47 @@
       }
     });
 
-    // Custom cursor logic
+    // Custom cursor logic with glowing wind effect
     const cursor = document.querySelector('.custom-cursor');
     const cursorDot = document.querySelector('.custom-cursor-dot');
+    let lastX = 0, lastY = 0;
+    let moveThreshold = 1; // Reduced threshold for smoother trail
+    let frameCount = 0;
 
     window.addEventListener('mousemove', (e) => {
       gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
       gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.05, ease: "power2.out" });
+      
+      // Calculate movement distance
+      const deltaX = Math.abs(e.clientX - lastX);
+      const deltaY = Math.abs(e.clientY - lastY);
+      
+      // Create glow trail more frequently for smoother effect
+      if (deltaX > moveThreshold || deltaY > moveThreshold) {
+        frameCount++;
+        // Create glow every frame for smooth continuous trail
+        if (frameCount % 1 === 0) {
+          createGlowTrail(e.clientX, e.clientY);
+        }
+      }
+      
+      lastX = e.clientX;
+      lastY = e.clientY;
     });
+
+    // Function to create glowing wind trail
+    function createGlowTrail(x, y) {
+      const glow = document.createElement('div');
+      glow.className = 'cursor-glow';
+      glow.style.left = x + 'px';
+      glow.style.top = y + 'px';
+      document.body.appendChild(glow);
+      
+      // Remove glow element after animation completes
+      setTimeout(() => {
+        glow.remove();
+      }, 1200);
+    }
 
     // Hover effects for interactive elements
     document.querySelectorAll('a, button, .content-card').forEach(el => {
