@@ -220,22 +220,26 @@
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.25) 40%, transparent 70%);
       pointer-events: none;
       z-index: 9998;
       transform: translate(-50%, -50%);
-      animation: fadeOutGlow 1.2s ease-out forwards;
-      filter: blur(8px);
+      animation: fadeOutGlow 2s ease-in-out forwards;
+      filter: blur(10px);
     }
 
     @keyframes fadeOutGlow {
       0% {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(0.8);
+        transform: translate(-50%, -50%) scale(0.6);
+      }
+      50% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1.2);
       }
       100% {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(1.8);
+        transform: translate(-50%, -50%) scale(2);
       }
     }
 
@@ -246,6 +250,17 @@
 
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
+      body {
+        cursor: auto !important; /* Restore default cursor on mobile */
+      }
+
+      .custom-cursor,
+      .custom-cursor-dot,
+      .cursor-glow {
+        display: none !important; /* Hide custom cursor elements on mobile */
+      }
+
+
       .opening-section h2 {
         font-size: 2rem;
         padding: 0 1rem;
@@ -426,33 +441,42 @@
       }
     });
 
-    // Custom cursor logic with glowing wind effect
+    // Custom cursor logic with glowing wind effect (desktop only)
     const cursor = document.querySelector('.custom-cursor');
     const cursorDot = document.querySelector('.custom-cursor-dot');
     let lastX = 0, lastY = 0;
-    let moveThreshold = 1; // Reduced threshold for smoother trail
+    let moveThreshold = 3; // Increased threshold for less frequent spawning
     let frameCount = 0;
 
-    window.addEventListener('mousemove', (e) => {
-      gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
-      gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.05, ease: "power2.out" });
-      
-      // Calculate movement distance
-      const deltaX = Math.abs(e.clientX - lastX);
-      const deltaY = Math.abs(e.clientY - lastY);
-      
-      // Create glow trail more frequently for smoother effect
-      if (deltaX > moveThreshold || deltaY > moveThreshold) {
-        frameCount++;
-        // Create glow every frame for smooth continuous trail
-        if (frameCount % 1 === 0) {
-          createGlowTrail(e.clientX, e.clientY);
+    // Check if device has mouse (not touch-only)
+    const hasMouseSupport = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (hasMouseSupport) {
+      window.addEventListener('mousemove', (e) => {
+        gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.2, ease: "power1.out" });
+        gsap.to(cursorDot, { x: e.clientX, y: e.clientY, duration: 0.08, ease: "power1.out" });
+        
+        // Calculate movement distance
+        const deltaX = Math.abs(e.clientX - lastX);
+        const deltaY = Math.abs(e.clientY - lastY);
+        
+        // Create glow trail at controlled intervals for smoother effect
+        if (deltaX > moveThreshold || deltaY > moveThreshold) {
+          frameCount++;
+          // Create glow every 2 frames for smooth but not overwhelming trail
+          if (frameCount % 2 === 0) {
+            createGlowTrail(e.clientX, e.clientY);
+          }
         }
-      }
-      
-      lastX = e.clientX;
-      lastY = e.clientY;
-    });
+        
+        lastX = e.clientX;
+        lastY = e.clientY;
+      });
+    } else {
+      // Hide cursor elements on touch devices
+      if (cursor) cursor.style.display = 'none';
+      if (cursorDot) cursorDot.style.display = 'none';
+    }
 
     // Function to create glowing wind trail
     function createGlowTrail(x, y) {
@@ -465,7 +489,7 @@
       // Remove glow element after animation completes
       setTimeout(() => {
         glow.remove();
-      }, 1200);
+      }, 2000);
     }
 
     // Hover effects for interactive elements
